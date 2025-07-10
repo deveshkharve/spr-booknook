@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+      "baseUrl": "./src",
+      "paths": {
+        "@models/*": ["models/*"],
+        "@routes/*": ["routes/*"],
+        "@services/*": ["services/*"],
+        "@graphql/*": ["graphql/*"],
+        "@configs": ["configs/*"],
+        "@middleware": ["middleware/*"],
+        "@utils/*": ["utils/*"]
+      }
+    },
+    "include": ["src"]
+}
