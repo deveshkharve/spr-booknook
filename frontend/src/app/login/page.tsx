@@ -58,7 +58,7 @@ export default function SignupPage() {
 
   return (
     <div className="max-w-md mx-auto mt-12 bg-white border border-gray-200 rounded-lg shadow p-8">
-      <h1 className="text-2xl font-bold mb-6 text-center">Sign Up</h1>
+      <h1 className="text-2xl font-bold mb-6 text-center">Login</h1>
       <form onSubmit={handleSubmit} className="space-y-5">
         <div>
           <label className="block text-gray-700 mb-1" htmlFor="username">
