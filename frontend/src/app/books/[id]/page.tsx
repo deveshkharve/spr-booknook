@@ -1,9 +1,10 @@
 "use client";
 import React, { useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useQuery, gql, useMutation } from "@apollo/client";
 import { CarouselDefault } from "@/app/components/Carousel";
 import ReviewRating from "@/app/components/ReviewRating";
+import Link from "next/link";
 
 const GET_BOOK_BY_ID = gql`
   query GetBookById($id: ID!) {
@@ -44,6 +45,13 @@ const CREATE_REVIEW = gql`
   }
 `;
 
+const DELETE_BOOK = gql`
+  mutation deleteBook($id: ID!) {
+    deleteBook(id: $id)
+  }
+`;
+
+
 const PAGE_SIZE = 2;
 
 function ReviewItem (props: {item: { rating: number; review: string }}) {
@@ -64,9 +72,11 @@ function ReviewItem (props: {item: { rating: number; review: string }}) {
 
 export default function BookDetailsPage() {
   const params = useParams();
+  const router = useRouter();
   const { id } = params;
   const [page, setPage] = useState(1);
   const [createBookReview] = useMutation(CREATE_REVIEW);
+  const [deleteBook] = useMutation(DELETE_BOOK);
 
   const { data, loading, error } = useQuery(GET_BOOK_BY_ID, { variables: { id } });
   const { data: reviewsData, loading: reviewsLoading, error: reviewsError } = useQuery(GET_REVIEWS_BY_BOOK_ID, {
@@ -86,10 +96,42 @@ export default function BookDetailsPage() {
 
   const submitReviewForm = async (data: { review: string, rating: number }) => {
     await createBookReview({ variables: { bookId: id, ...data } })
+    // Refresh the page after submitting a review
+    if (typeof window !== "undefined") {
+      window.location.reload();
+    }
   }
 
   return (
-    <div className="max-w-xl mx-auto mt-10 bg-white border border-gray-200 rounded-lg shadow p-6 flex flex-col items-center">
+    <div className="max-w-xl mx-auto mt-10 bg-white border border-gray-200 rounded-lg shadow p-6 flex flex-col items-center relative">
+      <div className="w-full flex justify-end mb-2">
+        <Link
+          className="inline-flex items-center justify-center hover:bg-green-100 text-white p-2 rounded transition"
+          title="Edit"
+          style={{ width: 36, height: 36 }}
+          href={`/books/edit/${id}`}
+        >
+          <img src="/edit-pen.svg" alt="Edit" className="w-5 h-5" />
+        </Link>
+        <button
+            className="inline-flex items-center justify-center bg-red-500 hover:bg-red-600 text-white p-2 rounded transition"
+            onClick={() => {
+              if (confirm("Are you sure you want to delete this author?")) {
+                deleteBook({ variables: { id } })
+                  .then(() => {
+                    window.location.href = "/books";
+                  })
+                  .catch((err) => {
+                    alert("Error deleting author profile.");
+                  });
+              }
+            }}
+            title="Delete Author"
+            style={{ width: 36, height: 36 }}
+          >
+            <img src="/delete.svg" alt="Delete" className="w-5 h-5" />
+          </button>
+      </div>
       {/* <img
         src={`${BASE_URL}/${book.images[0]}` || "/file.svg"}
         alt={book.title}

@@ -122,19 +122,18 @@ const BookMutationFields = {
     //     },
     //     resolve: (_, args) => BookService.createBook(args)
     // },
-    // updateBook: {
-    //     type: BookType,
-    //     args: {
-    //         id: { type: new GraphQLNonNull(GraphQLID) },
-    //         title: { type: GraphQLString },
-    //         description: { type: GraphQLString },
-    //         published_date: { type: GraphQLString },
-    //         author_id: { type: GraphQLID },
-    //     },
-    //     async resolve(_, args) {
-    //         return BookService.updateBook(args)
-    //     },
-    // },
+    updateBook: {
+        type: BookType,
+        args: {
+            id: { type: new GraphQLNonNull(GraphQLID) },
+            title: { type: GraphQLString },
+            description: { type: GraphQLString },
+            published_date: { type: GraphQLString },
+        },
+        async resolve(_, args) {
+            return BookService.updateBook(args)
+        },
+    },
     deleteBook: {
         type: GraphQLBoolean,
         args: { id: { type: new GraphQLNonNull(GraphQLID) } },

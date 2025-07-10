@@ -60,10 +60,10 @@ const createBook = async (context, { title, description, published_date, author_
   return Book.create({ title, description, published_date, author_id, thumbnail, images, created_by: { id, username } })
 };
 
-const updateBook = async ({ id, title, description, published_date, author_id }) => {
+const updateBook = async ({ id, title, description, published_date }) => {
   const book = await Book.findByPk(id);
   if (!book) throw new Error('Book not found');
-  await book.update({ title, description, published_date, author_id });
+  await book.update({ title, description, published_date });
   return book;
 };
 

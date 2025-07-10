@@ -13,6 +13,10 @@ const sequelize = new Sequelize(
     host: process.env.PG_HOST || 'localhost',
     dialect: 'postgres',
     logging: false,
+    dialectOptions: {
+      ssl: process.env.SSL_MODE === 'require' ? { require: true, rejectUnauthorized: false } : false,
+      channel_binding: process.env.CHANNEL_BINDING || 'require'
+    }
   }
 );
 
